@@ -118,7 +118,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 #galeria .stitle{color:var(--w)}
 /* GALLERY SLIDER */
 .gal-slider{position:relative;width:100%;margin-top:2.5rem;border-radius:18px;overflow:hidden;background:#0b1e3a;box-shadow:0 8px 40px rgba(0,0,0,.35)}
-.gal-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.gal-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
 .gal-slide{min-width:100%;height:580px;display:flex;align-items:center;justify-content:center;background:#0b1e3a;overflow:hidden}
 .gal-slide img{width:100%;height:100%;object-fit:cover;display:block}
 .gal-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .15s;z-index:10;line-height:1}
@@ -732,25 +732,27 @@ function galGo(i) {
   galUpdate();
 }
 // Swipe support
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   var el = document.getElementById('galSlider');
   if (!el) return;
+  galUpdate();
   var startX = 0;
   el.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, {passive:true});
   el.addEventListener('touchend', function(e) {
     var dx = e.changedTouches[0].clientX - startX;
     if (Math.abs(dx) > 40) galMove(dx < 0 ? 1 : -1);
   }, {passive:true});
-  // Auto-play every 5s
   setInterval(function() { galMove(1); }, 5000);
-})();
-var obs = new IntersectionObserver(function(es) {
-  es.forEach(function(e) { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
-}, { threshold: 0.08 });
-document.querySelectorAll('.sc,.svc,.av').forEach(function(el) {
-  el.style.opacity='0'; el.style.transform='translateY(18px)';
-  el.style.transition='opacity .55s ease,transform .55s ease';
-  obs.observe(el);
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var obs = new IntersectionObserver(function(es) {
+    es.forEach(function(e) { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.sc,.svc,.av').forEach(function(el) {
+    el.style.opacity='0'; el.style.transform='translateY(18px)';
+    el.style.transition='opacity .55s ease,transform .55s ease';
+    obs.observe(el);
+  });
 });
 </script>
 </body>
